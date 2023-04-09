@@ -50,7 +50,9 @@ export interface ReadOption extends OpenOption {
 	encoding?: BufferEncoding;
 }
 
-export interface WriteOption extends OpenOption {
+export interface WriteOption {
+	flag?: FileFlag;
+	mode?: string | number;
 	encoding?: BufferEncoding;
 	recursive?: boolean;
 }

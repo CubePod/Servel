@@ -17,7 +17,7 @@
  */
 
 import * as fs from 'fs';
-import { ContextType, FileFlag, ReadOption } from './FileMetadata';
+import { ContextType, FileFlag, ReadOption, WriteOption } from './FileMetadata';
 import RuntimeException from '../exception/Exceptions/RuntimeException';
 import ParameterException from '../exception/Exceptions/ParameterException';
 import Exception from '../exception/Exception';
@@ -159,6 +159,136 @@ export default class FileSync {
 					null,
 					new RuntimeException('ENV', (e as Error).message),
 					null
+				);
+			}
+		} else {
+			throw new ParameterException(
+				'context.type',
+				'Unexpected context type'
+			);
+		}
+	}
+
+	/**
+	 * Write specific content to a specific file
+	 * @author SuiBian9516
+	 * @since v0.0.1
+	 * @param context FileSystem Context
+	 * @param content Content you want to write
+	 * @param callback Handling function
+	 */
+	public static write(
+		context: { path: string; type: ContextType.FILE },
+		content: string,
+		callback: (err: Exception | null) => void
+	): void;
+
+	/**
+	 * Write specific content to a specific file
+	 * @author SuiBian9516
+	 * @since v0.0.1
+	 * @param context FileSystem Context
+	 * @param content Content you want to write
+	 * @param options Extra options
+	 * @param callback Handling function
+	 */
+	public static write(
+		context: { path: string; type: ContextType.FILE },
+		content: string,
+		options: WriteOption,
+		callback: (err: Exception | null) => void
+	): void;
+
+	/**
+	 * Make a directory by specific path
+	 * @author SuiBian9516
+	 * @since v0.0.1
+	 * @param context FileSystem Context
+	 * @param callback Handling function
+	 */
+	public static write(
+		context: {
+			path: string;
+			type: ContextType.DIRECTORY;
+		},
+		callback: (err: Exception | null) => void
+	): void;
+
+	/**
+	 * Make a directory by specific path
+	 * @author SuiBian9516
+	 * @since v0.0.1
+	 * @param context FileSystem Context
+	 * @param options Extra options
+	 * @param callback Handling function
+	 */
+	public static write(
+		context: {
+			path: string;
+			type: ContextType.DIRECTORY;
+		},
+		options: WriteOption,
+		callback: (err: Exception | null) => void
+	): void;
+
+	public static write(
+		context: { path: string; type: ContextType },
+		...args: any[]
+	): void {
+		if (context.type === ContextType.FILE) {
+			let content: string = args[0];
+			let options: WriteOption | undefined = undefined;
+			let callback: (err: Exception | null) => void | undefined;
+			if (typeof args[1] === 'function') {
+				callback = args[1];
+				options = {
+					flag: FileFlag.WRITE,
+					mode: 0o666,
+					encoding: 'utf-8',
+				};
+			} else {
+				options = args[1];
+				callback = args[2];
+			}
+			try {
+				let file: number = fs.openSync(
+					context.path,
+					(options as WriteOption).flag ?? FileFlag.WRITE,
+					(options as WriteOption).mode
+				);
+				fs.writeSync(
+					file,
+					content,
+					null,
+					(options as WriteOption).encoding
+				);
+				fs.closeSync(file);
+				(callback as (err: Exception | null) => void).call(null, null);
+			} catch (e) {
+				(callback as (err: Exception | null) => void).call(
+					null,
+					new RuntimeException('ENV', (e as Error).message)
+				);
+			}
+		} else if (context.type === ContextType.DIRECTORY) {
+			let options: WriteOption | undefined;
+			let callback: (err: Exception | null) => void | undefined;
+			if (typeof args[0] === 'function') {
+				callback = args[0];
+				options = { recursive: true };
+			} else {
+				options = args[0];
+				callback = args[1];
+			}
+			try {
+				fs.mkdirSync(context.path, {
+					recursive: (options as WriteOption).recursive,
+				});
+				(callback as (err: Exception | null) => void).call(null, null);
+			} catch (e) {
+				(callback as (err: Exception | null) => void).call(
+					null,
+					new RuntimeException('ENV', (e as Error).message)
 				);
 			}
 		} else {

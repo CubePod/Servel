@@ -17,7 +17,7 @@
  */
 
 import * as fs from 'fs';
-import { ContextType, FileFlag, ReadOption } from './FileMetadata';
+import { ContextType, FileFlag, ReadOption, WriteOption } from './FileMetadata';
 import RuntimeException from '../exception/Exceptions/RuntimeException';
 import ParameterException from '../exception/Exceptions/ParameterException';
 
@@ -109,6 +109,95 @@ export default class FileSync {
 		} else if (context.type === ContextType.DIRECTORY) {
 			try {
 				return fs.readdirSync(context.path);
+			} catch (e) {
+				throw new RuntimeException('ENV', (e as Error).message);
+			}
+		} else {
+			throw new ParameterException(
+				'context.type',
+				'Unexpected context type'
+			);
+		}
+	}
+
+	/**
+	 * Write specific content to a specific file
+	 * @author SuiBian9516
+	 * @since v0.0.1
+	 * @param context FileSystem Context
+	 * @param content Content you want to write
+	 */
+	public static write(
+		context: { path: string; type: ContextType.FILE },
+		content: string
+	): void;
+
+	/**
+	 * Write specific content to a specific file
+	 * @author SuiBian9516
+	 * @since v0.0.1
+	 * @param context FileSystem Context
+	 * @param content Content you want to write
+	 * @param options Extra options
+	 */
+	public static write(
+		context: { path: string; type: ContextType.FILE },
+		content: string,
+		options: WriteOption
+	): void;
+
+	/**
+	 * Make a directory by specific path
+	 * @author SuiBian9516
+	 * @since v0.0.1
+	 * @param context FileSystem Context
+	 */
+	public static write(context: {
+		path: string;
+		type: ContextType.DIRECTORY;
+	}): void;
+
+	/**
+	 * Make a directory by specific path
+	 * @author SuiBian9516
+	 * @since v0.0.1
+	 * @param context FileSystem Context
+	 * @param options Extra options
+	 */
+	public static write(
+		context: {
+			path: string;
+			type: ContextType.DIRECTORY;
+		},
+		options: WriteOption
+	): void;
+
+	public static write(
+		context: { path: string; type: ContextType },
+		...args: any[]
+	): void {
+		if (context.type === ContextType.FILE) {
+			try {
+				let content: string = args[0];
+				let options: WriteOption = args[1] ?? {
+					flag: FileFlag.WRITE,
+					mode: 0o666,
+					encoding: 'utf-8',
+				};
+				let file: number = fs.openSync(
+					context.path,
+					options.flag ?? FileFlag.WRITE,
+					options.mode
+				);
+				fs.writeSync(file, content, null, options.encoding);
+				fs.closeSync(file);
+			} catch (e) {
+				throw new RuntimeException('ENV', (e as Error).message);
+			}
+		} else if (context.type === ContextType.DIRECTORY) {
+			try {
+				let options: WriteOption = args[0] ?? { recursive: true };
+				fs.mkdirSync(context.path, { recursive: options.recursive });
 			} catch (e) {
 				throw new RuntimeException('ENV', (e as Error).message);
 			}
