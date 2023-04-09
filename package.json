@@ -1,0 +1,15 @@
+{
+	"name": "servel",
+	"version": "0.0.1",
+	"description": "A weight-light, extendable server software, written in Typescript",
+	"main": "index.js",
+	"repository": "https://github.com/CubePod/Servel.git",
+	"author": "SuiBian9516 <m1311826090@outlook.com>",
+	"license": "GPL",
+	"private": false,
+	"dependencies": {
+		"@types/node": "^18.15.11",
+		"prettier": "^2.8.7",
+		"typescript": "^5.0.3"
+	}
+}
