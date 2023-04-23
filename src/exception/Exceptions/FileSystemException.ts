@@ -18,8 +18,8 @@
 
 import Exception from '../Exception';
 
-export default class FileException extends Exception {
-	private metadata: { path: string; method: string; message: string };
+export default class FileSystemException extends Exception {
+	private metadata: { method: string; message: string };
 
 	/**
 	 * Create FileException
@@ -29,12 +29,9 @@ export default class FileException extends Exception {
 	 * @param method Name of method
 	 * @param message Extra message
 	 */
-	public constructor(path: string, method: string, message: string) {
-		super(
-			`${message}\n[Path] ${path}\n[Method] ${method}`,
-			'FileException'
-		);
-		this.metadata = { path: path, method: method, message: message };
+	public constructor(method: string, message: string) {
+		super(`${message}\n[Method] ${method}`, 'FileException');
+		this.metadata = { method: method, message: message };
 	}
 
 	/**
@@ -53,7 +50,7 @@ export default class FileException extends Exception {
 	 * @since v0.0.1
 	 * @returns Metadata of exception
 	 */
-	public getMetadata(): { path: string; method: string; message: string } {
+	public getMetadata(): { method: string; message: string } {
 		return this.metadata;
 	}
 }
