@@ -17,25 +17,25 @@
  */
 
 //Descriptor Enum
-export enum ContextType {
+export enum OperationMode {
 	/**
-	 * Refers to file
+	 * Refers to synchronous mode
 	 * @author SuiBian9516
 	 * @since v0.0.1
 	 */
-	FILE,
+	SYNCHRONOUS,
 	/**
-	 * Refers to directory
+	 * Refers to asynchronous mode
 	 * @author SuiBian9516
 	 * @since v0.0.1
 	 */
-	DIRECTORY,
+	ASYNCHRONOUS,
 	/**
-	 * Refers to symbolic link
+	 * Refers to callback mode
 	 * @author SuiBian9516
 	 * @since v0.0.1
 	 */
-	LINK,
+	CALLBACK,
 }
 
 //Flag Enum
