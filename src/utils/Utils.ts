@@ -18,21 +18,101 @@
 
 export default class Utils {
 	/**
-	 * Create a memorial function
+	 * Check whether data is type of string
 	 * @author SuiBian9516
 	 * @since v0.0.1
-	 * @param fn Function that will have memory function
-	 * @param index Cache name
-	 * @returns A function with memorial function
+	 * @param d Data you will pass
+	 * @returns
 	 */
-	public static memorize(fn: Function, index: number): Function {
-		const cache: any = Object.create(null);
-		return function cachedFunction(...args: any[]): any {
-			if (args[index] in cache) {
-				return cache[args[index]];
-			} else {
-				cache[args[index]] = fn.apply(null, args);
-			}
-		};
+	public static isString(d: unknown): boolean {
+		return typeof d === 'string';
+	}
+
+	/**
+	 * Check whether data is type of number
+	 * @author SuiBian9516
+	 * @since v0.0.1
+	 * @param d Data you will pass
+	 * @returns
+	 */
+	public static isNumber(d: unknown): boolean {
+		return typeof d === 'number';
+	}
+
+	/**
+	 * Check whether data is type of boolean
+	 * @author SuiBian9516
+	 * @since v0.0.1
+	 * @param d Data you will pass
+	 * @returns
+	 */
+	public static isBoolean(d: unknown): boolean {
+		return typeof d === 'boolean';
+	}
+
+	/**
+	 * Check whether data is type of undefined
+	 * @author SuiBian9516
+	 * @since v0.0.1
+	 * @param d Data you will pass
+	 * @returns
+	 */
+	public static isUndefined(d: unknown): boolean {
+		return typeof d === 'undefined';
+	}
+
+	/**
+	 * Check whether data is type of null
+	 * @author SuiBian9516
+	 * @since v0.0.1
+	 * @param d Data you will pass
+	 * @returns
+	 */
+	public static isNull(d: unknown): boolean {
+		return d === null;
+	}
+
+	/**
+	 * Check whether data is type of function
+	 * @author SuiBian9516
+	 * @since v0.0.1
+	 * @param d Data you will pass
+	 * @returns
+	 */
+	public static isFunction(d: unknown): boolean {
+		return typeof d === 'function';
+	}
+
+	/**
+	 * Check whether data is type of object
+	 * @author SuiBian9516
+	 * @since v0.0.1
+	 * @param d Data you will pass
+	 * @returns
+	 */
+	public static isObject(d: unknown): boolean {
+		return d?.constructor === Object;
+	}
+
+	/**
+	 * Check whether data is type of array
+	 * @author SuiBian9516
+	 * @since v0.0.1
+	 * @param d Data you will pass
+	 * @returns
+	 */
+	public static isArray(d: unknown): boolean {
+		return d?.constructor === Array;
+	}
+
+	/**
+	 * Check whether data is type of symbol
+	 * @author SuiBian9516
+	 * @since v0.0.1
+	 * @param d Data you will pass
+	 * @returns
+	 */
+	public static isSymbol(d: unknown): boolean {
+		return typeof d === 'symbol';
 	}
 }
